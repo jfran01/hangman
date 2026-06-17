@@ -10,7 +10,7 @@ class Game
     @guessed = []
     @correct_letters = []
     @incorrect_letters = []
-    @guesses = 0
+    @guesses = 1
   end
 
   def new_game
@@ -24,7 +24,7 @@ class Game
           exit!
         end
     end
-    puts "Commiserations fine player, I'm sure he was guilty anyway..."
+    puts "You lost - the word was '#{@secret}' \nCommiserations fine player, I'm sure he was guilty anyway..."
   end
 
   def print_rules
@@ -36,11 +36,15 @@ class Game
   end
 
   def new_round
-    # binding.pry
+    puts "\n--------------------------------------------------"
+    puts "Round #{@guesses}"
+    puts "--------------------------------------------------\n\n"
+    puts "Mistakes until death: #{6 - @incorrect_letters.size}\n\n"
     puts "Enter a letter to make your guess:"
     self.make_guess
     self.check_guess
     @display.update_correct_letters(@secret, @correct_letters)
+    @display.draw_hangman(@incorrect_letters.size)
     @guesses += 1
   end
 
