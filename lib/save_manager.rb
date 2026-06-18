@@ -7,8 +7,7 @@ module SaveData
     filename
   end
 
-  def self.to_save_data (secret, correct_letters, incorrect_letters, guesses)
-    filename = self.get_file_name
+  def self.to_save_data (secret, correct_letters, incorrect_letters, guesses, filename)
     save_data = {
       secret: secret,
       correct_letters: correct_letters,
@@ -16,12 +15,11 @@ module SaveData
       guesses: guesses
     }
     File.write(filename, YAML.dump(save_data))
-    data = YAML.load filename
-    p data
   end
 
   def self.from_save_data(filename)
+    data = YAML.load_file(filename)
+    p data
   end
 end
 
-SaveData.to_save_data("hello", [], [], 0)

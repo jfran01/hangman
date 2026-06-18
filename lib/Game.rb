@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 require_relative 'display'
+require_relative 'save_manager'
 
 class Game
+  include SaveData
   attr_reader :secret
 
   def initialize
@@ -41,6 +43,7 @@ class Game
     puts "Mistakes until death: #{6 - @incorrect_letters.size}\n\n"
     puts 'Enter a letter to make your guess:'
     make_guess
+    self.save_game if @current_guess.downcase == "save"
     check_guess
     @display.update_correct_letters(@secret, @correct_letters)
     @display.draw_hangman(@incorrect_letters.size)
@@ -53,7 +56,7 @@ class Game
       puts "That isn't a valid letter... try again:"
       make_guess
     end
-    if @current_guess.length > 1
+    if @current_guess.length > 1 && @current_guess != "save"
       @current_guess = @current_guess[0]
       puts 'Hmm, you tried to add too many letters to your guess (cheater or simple mistake?)...'
       puts "Taking just the first letter, your guess was '#{@current_guess}'."
@@ -71,7 +74,15 @@ class Game
     else
       puts "Oh dear... #{@current_guess} does not appear in the secret word."
       @incorrect_letters << @current_guess
+      puts "Incorrect letters: #{@incorrect_letters}"
     end
+  end
+
+  def save_game
+    @last_file = SaveData.get_file_name
+    SaveData.to_save_data(@secret, @correct_letters, @incorrect_letters, @guesses, @last_file)
+    p @last_file
+    exit!
   end
 end
 
