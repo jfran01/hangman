@@ -18,14 +18,10 @@ class Game
 
   def new_game
     puts 'Welcome to Hangman; the fun game where each wrong guess puts a (stick) man closer to his death.'
-    puts 'Do you need a reminder of the rules? (Y/N)'
-    rules_needed = gets.chomp.upcase
-    print_rules if rules_needed[0] == 'Y'
+    print_rules
     puts 'Do you wish to continue a game? (Y/N)'
     continue_game = gets.chomp.upcase
-    if continue_game == 'Y'
-      self.load_game
-    end
+    load_game if continue_game == 'Y'
     puts @display.update_correct_letters(@secret, @correct_letters)
     until @incorrect_letters.size > 6
       new_round
@@ -38,6 +34,10 @@ class Game
   end
 
   def print_rules
+    puts 'Do you need a reminder of the rules? (Y/N)'
+    rules_needed = gets.chomp.upcase
+    return unless rules_needed[0] == 'Y'
+
     puts "\nObjective: you must figure out the secret word before a fellow citizen gets put to death (the stickman is fully drawn)"
     puts 'You will be presented with a line of dashes; each dash represents a letter of the secret word (no. dashes = length of the secret word)'
     puts 'You will enter one letter of the alphabet at a time.'
@@ -55,7 +55,7 @@ class Game
     puts "Mistakes until death: #{6 - @incorrect_letters.size}\n\n"
     puts 'Enter a letter to make your guess:'
     make_guess
-    self.save_game if @current_guess.downcase == "save"
+    save_game if @current_guess.downcase == 'save'
     check_guess
     @display.update_correct_letters(@secret, @correct_letters)
     @display.draw_hangman(@incorrect_letters.size)
@@ -68,7 +68,7 @@ class Game
       puts "That isn't a valid letter... try again:"
       make_guess
     end
-    if @current_guess.length > 1 && @current_guess.downcase != 'save' 
+    if @current_guess.length > 1 && @current_guess.downcase != 'save'
       @current_guess = @current_guess[0]
       puts 'Hmm, you tried to add too many letters to your guess (cheater or simple mistake?)...'
       puts "Taking just the first letter, your guess was '#{@current_guess}'."
@@ -91,7 +91,7 @@ class Game
   end
 
   def save_game
-    @filename = SaveData.get_file_name unless self.filename
+    @filename = SaveData.generate_file_name unless filename
     SaveData.to_save_data(@secret, @correct_letters, @incorrect_letters, @guesses, @filename)
     puts "Your game was saved under: #{@filename}"
     exit!
