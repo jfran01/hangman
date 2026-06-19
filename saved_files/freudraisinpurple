@@ -1,0 +1,8 @@
+---
+:secret: collecting
+:correct_letters: []
+:incorrect_letters:
+- a
+- r
+:guesses: 3
+:filename: freudraisinpurple
