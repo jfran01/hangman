@@ -26,6 +26,7 @@ class Game
     if continue_game == 'Y'
       self.load_game
     end
+    puts @display.update_correct_letters(@secret, @correct_letters)
     until @incorrect_letters.size > 6
       new_round
       if @display.correct_letters == @secret
@@ -37,7 +38,11 @@ class Game
   end
 
   def print_rules
-    puts 'Rules go here'
+    puts "\nObjective: you must figure out the secret word before a fellow citizen gets put to death (the stickman is fully drawn)"
+    puts 'You will be presented with a line of dashes; each dash represents a letter of the secret word (no. dashes = length of the secret word)'
+    puts 'You will enter one letter of the alphabet at a time.'
+    puts 'If you are correct and the letter appears in the word, all instances of the corresponding dashes will be replaced by the letter'
+    puts "If you are incorrect and the letter does not appear in the word, another body part will be added to the gallows and the man will be closer to his death.\n\n"
     puts "Press enter when you're ready to continue..."
     sleep(5) until gets == "\n"
   end
