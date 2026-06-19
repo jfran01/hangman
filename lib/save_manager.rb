@@ -13,7 +13,7 @@ module SaveData
       correct_letters: correct_letters,
       incorrect_letters: incorrect_letters,
       guesses: guesses,
-      last_file: filename
+      filename: filename
     }
     save_path = File.join("saved_files", filename)
     File.write(save_path, YAML.dump(save_data))
@@ -33,6 +33,7 @@ module SaveData
     end
     filename = File.join("saved_files", filename)
     data = YAML.load_file(filename)
+    File.delete(filename)
     data
   end
 end

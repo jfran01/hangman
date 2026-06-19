@@ -6,7 +6,7 @@ require 'pry-byebug'
 
 class Game
   include SaveData
-  attr_reader :secret, :last_file
+  attr_reader :secret, :filename
 
   def initialize
     @display = Display.new
@@ -86,9 +86,9 @@ class Game
   end
 
   def save_game
-    @last_file = SaveData.get_file_name unless self.last_file
-    SaveData.to_save_data(@secret, @correct_letters, @incorrect_letters, @guesses, @last_file)
-    puts "Your game was saved under: #{@last_file}"
+    @filename = SaveData.get_file_name unless self.filename
+    SaveData.to_save_data(@secret, @correct_letters, @incorrect_letters, @guesses, @filename)
+    puts "Your game was saved under: #{@filename}"
     exit!
   end
 
@@ -98,7 +98,7 @@ class Game
     @correct_letters = data[:correct_letters]
     @incorrect_letters = data[:incorrect_letters]
     @guesses = data[:guesses]
-    @last_file = data[:last_file]
+    @filename = data[:filename]
     @display.update_correct_letters(@secret, @correct_letters)
     @display.draw_hangman(@incorrect_letters.size)
     puts "Incorrect letters: #{@incorrect_letters}"
