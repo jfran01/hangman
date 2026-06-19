@@ -23,7 +23,7 @@ class Display
                             '-'
                           end
     end
-    puts "\nword: #{@correct_letters}\n"
+    puts "\nWord: #{@correct_letters}\n"
   end
 
   def draw_hangman(num)

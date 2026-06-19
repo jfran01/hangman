@@ -2,10 +2,11 @@
 
 require_relative 'display'
 require_relative 'save_manager'
+require 'pry-byebug'
 
 class Game
   include SaveData
-  attr_reader :secret
+  attr_reader :secret, :last_file
 
   def initialize
     @display = Display.new
@@ -20,6 +21,11 @@ class Game
     puts 'Do you need a reminder of the rules? (Y/N)'
     rules_needed = gets.chomp.upcase
     print_rules if rules_needed[0] == 'Y'
+    puts 'Do you wish to continue a game? (Y/N)'
+    continue_game = gets.chomp.upcase
+    if continue_game == 'Y'
+      self.load_game
+    end
     until @incorrect_letters.size > 6
       new_round
       if @display.correct_letters == @secret
@@ -40,6 +46,7 @@ class Game
     puts "\n--------------------------------------------------"
     puts "Round #{@guesses}"
     puts "--------------------------------------------------\n\n"
+    puts "[Type 'Save' if you wish to save your progress and exit the game]"
     puts "Mistakes until death: #{6 - @incorrect_letters.size}\n\n"
     puts 'Enter a letter to make your guess:'
     make_guess
@@ -56,7 +63,7 @@ class Game
       puts "That isn't a valid letter... try again:"
       make_guess
     end
-    if @current_guess.length > 1 && @current_guess != "save"
+    if @current_guess.length > 1 && @current_guess.downcase != 'save' 
       @current_guess = @current_guess[0]
       puts 'Hmm, you tried to add too many letters to your guess (cheater or simple mistake?)...'
       puts "Taking just the first letter, your guess was '#{@current_guess}'."
@@ -79,10 +86,22 @@ class Game
   end
 
   def save_game
-    @last_file = SaveData.get_file_name
+    @last_file = SaveData.get_file_name unless self.last_file
     SaveData.to_save_data(@secret, @correct_letters, @incorrect_letters, @guesses, @last_file)
-    p @last_file
+    puts "Your game was saved under: #{@last_file}"
     exit!
+  end
+
+  def load_game
+    data = SaveData.from_save_data
+    @secret = data[:secret]
+    @correct_letters = data[:correct_letters]
+    @incorrect_letters = data[:incorrect_letters]
+    @guesses = data[:guesses]
+    @last_file = data[:last_file]
+    @display.update_correct_letters(@secret, @correct_letters)
+    @display.draw_hangman(@incorrect_letters.size)
+    puts "Incorrect letters: #{@incorrect_letters}"
   end
 end
 
