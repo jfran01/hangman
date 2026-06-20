@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+# Outputs hangman and secret word representation
+#
+# Uses :correct_letters from game instance to display
+# hangman drawing at correct stage
 class Display
   attr_reader :correct_letters
 

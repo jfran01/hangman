@@ -2,6 +2,10 @@
 
 require 'yaml'
 
+# Handles saved game files
+#
+# Reads and writes YAML files to saved_files/ directory
+# for later access by Game class
 module SaveData
   def self.generate_file_name
     filename = ''

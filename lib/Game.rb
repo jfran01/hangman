@@ -4,6 +4,14 @@ require_relative 'display'
 require_relative 'save_manager'
 require 'pry-byebug'
 
+# Represents active game session
+#
+# Game instance stores game data including secret word
+# correct/incorrect guesses, and number of guesses. Also
+# instantiates a display to draw hangman etc.
+#
+# Game instances can be stored using #save_game and
+# reconstructed using #load_game
 class Game
   include SaveData
   attr_reader :secret, :filename
